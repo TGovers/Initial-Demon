@@ -11,37 +11,66 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
+
+
+
+
+AnimatedComponent::AnimatedComponent() {
+	currentIndex = 0;
+	currentImage = images[currentIndex];
+	Timer::startTimer(90);
+}
+
+void AnimatedComponent::timerCallback()
+{
+	DBG("in timer callback");
+	rotateImage();
+	repaint();
+}
+
+
+void AnimatedComponent::paint(juce::Graphics &g)
+{
+	//DBG(currentIndex);
+	g.drawImageAt(currentImage, 0, 0);
+}
+
+void AnimatedComponent::rotateImage() {
+
+	if (currentIndex < 24) {
+		currentIndex++;
+		currentImage = images[currentIndex];
+	}
+	else if (currentIndex >= 24) {//8
+		currentIndex = 0;
+		currentImage = images[currentIndex];
+	}
+	DBG(currentIndex);
+}
 //==============================================================================
 Initial_demonAudioProcessorEditor::Initial_demonAudioProcessorEditor (Initial_demonAudioProcessor& p)
     : AudioProcessorEditor (&p), processor (p)
 {
+    
+    addAndMakeVisible(BigboyAnimation);
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
     setOpaque(true);
-    setSize (540, 450);
+    setSize (530, 418);
     
-    filterCutoffDial.setTextBoxStyle(Slider::TextEntryBoxPosition::TextBoxAbove, true, 55, 30);
-    filterCutoffDial.setColour(Slider::ColourIds::textBoxTextColourId, Colours::black);
-    filterCutoffDial.setColour(Slider::ColourIds::textBoxOutlineColourId, Colour());
-    filterCutoffDial.setSliderStyle(Slider::SliderStyle::Rotary);
+    filterCutoffDial.setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
+    filterCutoffDial.setSliderStyle(Slider::SliderStyle::RotaryVerticalDrag);
     filterCutoffDial.setNumDecimalPlacesToDisplay(0);
-    filterCutoffDial.setSize(150, 100);
-    //filterCutoffDial.setRange(20.0, 20000.0);
-    filterCutoffDial.setTextValueSuffix("hz");
-    //filterCutoffDial.setColour(Slider::ColourIds::rotarySliderFillColourId, Colours::yellowgreen);
+    filterCutoffDial.setSize(45, 45);
     
     // dont change these two
     //filterCutoffDial.addListener(this);
     addAndMakeVisible(filterCutoffDial);
     
-    filterResDial.setTextBoxStyle(Slider::TextEntryBoxPosition::TextBoxAbove, true, 50,30);
-    filterResDial.setColour(Slider::ColourIds::textBoxOutlineColourId, Colour());
-    filterResDial.setSliderStyle(Slider::SliderStyle::Rotary);
-    filterResDial.setSize(150, 100);
-    //filterResDial.setRange(1.0, 5.0);
+    filterResDial.setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
+	filterResDial.setSliderStyle(Slider::SliderStyle::RotaryVerticalDrag);
+    filterResDial.setSize(45, 45);
     filterResDial.setTextValueSuffix("Q");
-    //filterResDial.setColour(Slider::ColourIds::rotarySliderFillColourId, Colours::yellowgreen);
-    filterResDial.setColour(Slider::ColourIds::textBoxTextColourId, Colours::black);
     
     // dont change these two
     //filterResDial.addListener(this);
@@ -51,12 +80,10 @@ Initial_demonAudioProcessorEditor::Initial_demonAudioProcessorEditor (Initial_de
     filterCutoffValue = new AudioProcessorValueTreeState::SliderAttachment (processor.mState, "cutoff", filterCutoffDial);
     filterResValue = new AudioProcessorValueTreeState::SliderAttachment (processor.mState, "resonance", filterResDial);
     
-    //filterCutoffDial.setSkewFactorFromMidPoint(1000.0f);
-    
     filterCutoffDial.setLookAndFeel(&otherLookAndFeel);
     filterResDial.setLookAndFeel(&otherLookAndFeel);
     
-    //addAndMakeVisible(filterCutoffLabel);
+    addAndMakeVisible(filterCutoffLabel);
     // filterCutoffLabel.setText("Cutoff Freq", dontSendNotification);
     mixLabel.attachToComponent(&filterCutoffDial, false);
     
@@ -65,90 +92,41 @@ Initial_demonAudioProcessorEditor::Initial_demonAudioProcessorEditor (Initial_de
     filterResLabel.attachToComponent(&filterResDial, false);
     
     
-    delayTimeDial.setTextBoxStyle(Slider::TextEntryBoxPosition::TextBoxAbove, true, 55, 30);
-    delayTimeDial.setColour(Slider::ColourIds::textBoxTextColourId, Colours::black);
-    delayTimeDial.setColour(Slider::ColourIds::textBoxOutlineColourId, Colour());
-    delayTimeDial.setSliderStyle(Slider::SliderStyle::Rotary);
-    delayTimeDial.setNumDecimalPlacesToDisplay(0);
-    delayTimeDial.setSize(150, 100);
-    delayTimeDial.setTextValueSuffix("ms");
+    delayTimeDial.setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
+    delayTimeDial.setSliderStyle(Slider::SliderStyle::RotaryVerticalDrag);
+    delayTimeDial.setSize(45, 45);
     
  //   delayTimeDial.addListener(this);
     addAndMakeVisible(delayTimeDial);
     
-    delayMixDial.setTextBoxStyle(Slider::TextEntryBoxPosition::TextBoxAbove, true, 55, 30);
-    delayMixDial.setColour(Slider::ColourIds::textBoxTextColourId, Colours::black);
-    delayMixDial.setColour(Slider::ColourIds::textBoxOutlineColourId, Colour());
-    delayMixDial.setSliderStyle(Slider::SliderStyle::Rotary);
-    delayMixDial.setNumDecimalPlacesToDisplay(0);
-    delayMixDial.setSize(150, 100);
-    delayMixDial.setTextValueSuffix("ms");
+    delayMixDial.setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
+    delayMixDial.setSliderStyle(Slider::SliderStyle::RotaryVerticalDrag);
+    delayMixDial.setSize(45, 45);
     
   //  delayMixDial.addListener(this);
     addAndMakeVisible(delayMixDial);
     
-    delayFeedbackDial.setTextBoxStyle(Slider::TextEntryBoxPosition::TextBoxAbove, true, 55, 30);
-    delayFeedbackDial.setColour(Slider::ColourIds::textBoxTextColourId, Colours::black);
-    delayFeedbackDial.setColour(Slider::ColourIds::textBoxOutlineColourId, Colour());
-    delayFeedbackDial.setSliderStyle(Slider::SliderStyle::Rotary);
-    delayFeedbackDial.setNumDecimalPlacesToDisplay(0);
-    delayFeedbackDial.setSize(150, 100);
-    delayFeedbackDial.setTextValueSuffix("ms");
+    delayFeedbackDial.setTextBoxStyle(Slider::NoTextBox, false, 0 ,0);
+    delayFeedbackDial.setSliderStyle(Slider::SliderStyle::RotaryVerticalDrag);
+    delayFeedbackDial.setSize(45, 45);
     
    // delayFeedbackDial.addListener(this);
     addAndMakeVisible(delayFeedbackDial);
     
-    delayMixDial.setTextBoxStyle(Slider::TextEntryBoxPosition::TextBoxAbove, true, 55, 30);
-    delayMixDial.setColour(Slider::ColourIds::textBoxTextColourId, Colours::black);
-    delayMixDial.setColour(Slider::ColourIds::textBoxOutlineColourId, Colour());
-    delayMixDial.setSliderStyle(Slider::SliderStyle::Rotary);
-    delayMixDial.setNumDecimalPlacesToDisplay(0);
-    delayMixDial.setSize(150, 100);
-    delayMixDial.setTextValueSuffix("ms");
-    
+    delayMixDial.setTextBoxStyle(Slider::NoTextBox, false, 0 ,0);
+    delayMixDial.setSliderStyle(Slider::SliderStyle::RotaryVerticalDrag);
+    delayMixDial.setSize(45, 45);
+
     //delayMixDial.addListener(this);
     addAndMakeVisible(delayMixDial);
-    
-    /*
-    delayEnablerDial.setTextBoxStyle(Slider::TextEntryBoxPosition::TextBoxAbove, true, 55, 30);
-    delayEnablerDial.setColour(Slider::ColourIds::textBoxTextColourId, Colours::black);
-    delayEnablerDial.setColour(Slider::ColourIds::textBoxOutlineColourId, Colour());
-    delayEnablerDial.setSliderStyle(Slider::SliderStyle::Rotary);
-    delayEnablerDial.setNumDecimalPlacesToDisplay(0);
-    delayEnablerDial.setSize(150, 100);
-    delayEnablerDial.setTextValueSuffix("%");
-    
-    delayEnablerDial.addListener(this);
-    addAndMakeVisible(delayEnablerDial);
-    */
-    
-    /*
-     Path shape;
-     shape.addEllipse(0, 0, 50, 50);
-     
-     delayEnablerButton.setRadioGroupId(1);
-     delayEnablerButton.setClickingTogglesState(true);
-     delayEnablerButton.shouldUseOnColours(true);
-     delayEnablerButton.setOnColours(Colours::darkslategrey, Colours::ivory, Colours::lightslategrey);
-     delayEnablerButton.setShape(shape, true, true, true);
-     //delayEnableAttachment.reset(new AudioProcessorValueTreeState::ButtonAttachment(processor.mState, "delayEnable", delayEnablerButton));
-     
-     //delayEnablerButton.addListener(this);
-     addAndMakeVisible(delayEnablerButton);
-     */
-    
-    delayTimeDial.setLookAndFeel(&otherLookAndFeel3);
- //   delayEnablerDial.setLookAndFeel(&otherLookAndFeel3);
+   
+    delayTimeDial.setLookAndFeel(&otherLookAndFeel);
     delayMixDial.setLookAndFeel(&otherLookAndFeel);
-    delayFeedbackDial.setLookAndFeel(&otherLookAndFeel2);
+    delayFeedbackDial.setLookAndFeel(&otherLookAndFeel);
     
     delayTimeValue = new AudioProcessorValueTreeState::SliderAttachment (processor.mState, "delayTime", delayTimeDial);
-//    delayEnablerValue = new AudioProcessorValueTreeState::SliderAttachment (processor.mState, "delayEnable", delayEnablerDial);
-    //delayEnableValue = new AudioProcessorValueTreeState::ButtonAttachment (processor.mState, "delayEnable", delayEnablerButton);
     delayMixValue = new AudioProcessorValueTreeState::SliderAttachment (processor.mState, "mix", delayMixDial);
     delayFeedbackValue = new AudioProcessorValueTreeState::SliderAttachment (processor.mState, "feedback", delayFeedbackDial);
-    
-    
 }
 
 Initial_demonAudioProcessorEditor::~Initial_demonAudioProcessorEditor()
@@ -158,21 +136,7 @@ Initial_demonAudioProcessorEditor::~Initial_demonAudioProcessorEditor()
 //==============================================================================
 void Initial_demonAudioProcessorEditor::paint (Graphics& g)
 {
-    // (Our component is opaque, so we must completely fill the background with a solid colour)
-    
-    //Image background = ImageCache::getFromMemory(BinaryData::ayaya7_png, BinaryData::ayaya7_pngSize);
-    //g.drawImageAt(background, 0, 0);
-    
-    g.fillAll (Colours::darkorchid);
-    
-    // g.setColour (Colours::aqua);
-    //g.setFont (15.0f);
-    // g.drawFittedText ("GOVERSA2 PLUGIN", getLocalBounds(), Justification::centred, 1);
-    
-    g.setColour(Colours::black);
-    g.setFont(Font ("Arial", 20.0f, Font::italic));
-    //g.drawFittedText("Random Test Font! Hi There!", 10, 10, getWidth(), 50,
-    //                 Justification::left, 1);
+
 }
 
 void Initial_demonAudioProcessorEditor::resized()
@@ -180,14 +144,13 @@ void Initial_demonAudioProcessorEditor::resized()
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
     
-    filterCutoffDial.setBounds(25, getHeight() - 135, 80, 80);
-	filterResDial.setBounds(125, getHeight() - 135, 80, 80);
+    filterCutoffDial.setBounds(341, getHeight() - 392, 80, 80);
+	filterResDial.setBounds(403.5, getHeight() - 392, 80, 80);
     
-    delayTimeDial.setBounds(0, getHeight()-280, 80, 80);
-//    delayEnablerDial.setBounds(100, getHeight()- 280, 80, 80);
-    //delayEnablerButton.setBounds(100, getHeight()- 280, 80, 80);
-    delayMixDial.setBounds(100, getHeight()- 280, 80, 80);
-    delayFeedbackDial.setBounds(200, getHeight()- 280, 80, 80);
+    delayTimeDial.setBounds(343, getHeight()-333, 80, 80);
+    delayMixDial.setBounds(463.96, getHeight() - 332, 80, 80);
+    delayFeedbackDial.setBounds(404, getHeight() - 332, 80, 80);
+	BigboyAnimation.setBounds(getLocalBounds());
     
     
 }

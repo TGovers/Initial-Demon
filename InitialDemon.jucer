@@ -2,6 +2,35 @@
 
 <JUCERPROJECT id="S9Ay8Z" name="Initial:Demon" projectType="audioplug" jucerVersion="5.4.3">
   <MAINGROUP id="Zu3kuA" name="Initial:Demon">
+    <GROUP id="{2AE26A26-18E8-BB1D-38EB-829AF631E0BE}" name="Animations ">
+      <FILE id="zdEy62" name="A2.png" compile="0" resource="1" file="Deamon animaton/A2.png"/>
+      <FILE id="JqsWv3" name="A3.png" compile="0" resource="1" file="Deamon animaton/A3.png"/>
+      <FILE id="fkOTML" name="A4.png" compile="0" resource="1" file="Deamon animaton/A4.png"/>
+      <FILE id="PUpqaY" name="A5.png" compile="0" resource="1" file="Deamon animaton/A5.png"/>
+      <FILE id="wRdF24" name="A6.png" compile="0" resource="1" file="Deamon animaton/A6.png"/>
+      <FILE id="XLemUj" name="A7.png" compile="0" resource="1" file="Deamon animaton/A7.png"/>
+      <FILE id="ZeUeOD" name="A8.png" compile="0" resource="1" file="Deamon animaton/A8.png"/>
+      <FILE id="o22UwY" name="A9.png" compile="0" resource="1" file="Deamon animaton/A9.png"/>
+      <FILE id="uHEtqI" name="A10.png" compile="0" resource="1" file="Deamon animaton/A10.png"/>
+      <FILE id="mVdcaY" name="A11.png" compile="0" resource="1" file="Deamon animaton/A11.png"/>
+      <FILE id="X7pAeK" name="A12.png" compile="0" resource="1" file="Deamon animaton/A12.png"/>
+      <FILE id="mMFzlc" name="A13.png" compile="0" resource="1" file="Deamon animaton/A13.png"/>
+      <FILE id="Up7qnv" name="A14.png" compile="0" resource="1" file="Deamon animaton/A14.png"/>
+      <FILE id="NcOXMm" name="A15.png" compile="0" resource="1" file="Deamon animaton/A15.png"/>
+      <FILE id="gYVuEY" name="A16.png" compile="0" resource="1" file="Deamon animaton/A16.png"/>
+      <FILE id="FSpkaP" name="A17.png" compile="0" resource="1" file="Deamon animaton/A17.png"/>
+      <FILE id="QMSEJv" name="A18.png" compile="0" resource="1" file="Deamon animaton/A18.png"/>
+      <FILE id="aUSTaY" name="A19.png" compile="0" resource="1" file="Deamon animaton/A19.png"/>
+      <FILE id="xrWvu2" name="A20.png" compile="0" resource="1" file="Deamon animaton/A20.png"/>
+      <FILE id="AfzcQM" name="A21.png" compile="0" resource="1" file="Deamon animaton/A21.png"/>
+      <FILE id="O5RQlr" name="A22.png" compile="0" resource="1" file="Deamon animaton/A22.png"/>
+      <FILE id="I7i8oW" name="A23.png" compile="0" resource="1" file="Deamon animaton/A23.png"/>
+      <FILE id="g8y5rh" name="A24.png" compile="0" resource="1" file="Deamon animaton/A24.png"/>
+      <FILE id="vTVsKU" name="A25.png" compile="0" resource="1" file="Deamon animaton/A25.png"/>
+      <FILE id="raBCZG" name="A26.png" compile="0" resource="1" file="Deamon animaton/A26.png"/>
+      <FILE id="zYLnke" name="A1.png" compile="0" resource="1" file="Deamon animaton/A1.png"/>
+    </GROUP>
+    <FILE id="fiwg8i" name="DemonKnob.png" compile="0" resource="1" file="DemonKnob.png"/>
     <GROUP id="{4E11BFAE-1DF6-AACE-02BF-C55938D9AB41}" name="Source">
       <FILE id="OsOYYa" name="DelayModule.cpp" compile="1" resource="0" file="Source/DelayModule.cpp"/>
       <FILE id="xc1T6j" name="PluginProcessor.cpp" compile="1" resource="0"
@@ -105,6 +134,7 @@
   </MODULES>
   <LIVE_SETTINGS>
     <OSX/>
+    <WINDOWS/>
   </LIVE_SETTINGS>
   <JUCEOPTIONS JUCE_VST3_CAN_REPLACE_VST2="0" JUCE_STRICT_REFCOUNTEDPOINTER="1"/>
 </JUCERPROJECT>

@@ -16,117 +16,89 @@
 //==============================================================================
 /**
 */
+class AnimatedComponent : public Component, public Timer
+{
+public:
+	void paint(Graphics& g) override;
+	void rotateImage();
+	Image A1 = ImageCache::getFromMemory(BinaryData::A1_png, BinaryData::A1_pngSize);
+	Image A2 = ImageCache::getFromMemory(BinaryData::A2_png, BinaryData::A2_pngSize);
+	Image A3 = ImageCache::getFromMemory(BinaryData::A3_png, BinaryData::A3_pngSize);
+	Image A4 = ImageCache::getFromMemory(BinaryData::A4_png, BinaryData::A4_pngSize);
+	Image A5 = ImageCache::getFromMemory(BinaryData::A5_png, BinaryData::A5_pngSize);
+	Image A6 = ImageCache::getFromMemory(BinaryData::A6_png, BinaryData::A6_pngSize);
+	Image A7 = ImageCache::getFromMemory(BinaryData::A7_png, BinaryData::A7_pngSize);
+	Image A8 = ImageCache::getFromMemory(BinaryData::A8_png, BinaryData::A8_pngSize);
+	Image A9 = ImageCache::getFromMemory(BinaryData::A9_png, BinaryData::A9_pngSize);
+	Image A10 = ImageCache::getFromMemory(BinaryData::A10_png, BinaryData::A10_pngSize);
+	Image A11 = ImageCache::getFromMemory(BinaryData::A11_png, BinaryData::A11_pngSize);
+	Image A12 = ImageCache::getFromMemory(BinaryData::A12_png, BinaryData::A12_pngSize);
+	Image A13 = ImageCache::getFromMemory(BinaryData::A13_png, BinaryData::A13_pngSize);
+	Image A14 = ImageCache::getFromMemory(BinaryData::A14_png, BinaryData::A14_pngSize);
+	Image A15 = ImageCache::getFromMemory(BinaryData::A15_png, BinaryData::A15_pngSize);
+	Image A16 = ImageCache::getFromMemory(BinaryData::A16_png, BinaryData::A16_pngSize);
+	Image A17 = ImageCache::getFromMemory(BinaryData::A17_png, BinaryData::A17_pngSize);
+	Image A18 = ImageCache::getFromMemory(BinaryData::A18_png, BinaryData::A18_pngSize);
+	Image A19 = ImageCache::getFromMemory(BinaryData::A19_png, BinaryData::A19_pngSize);
+	Image A20 = ImageCache::getFromMemory(BinaryData::A20_png, BinaryData::A20_pngSize);
+	Image A21 = ImageCache::getFromMemory(BinaryData::A21_png, BinaryData::A21_pngSize);
+	Image A23 = ImageCache::getFromMemory(BinaryData::A23_png, BinaryData::A23_pngSize);
+	Image A24 = ImageCache::getFromMemory(BinaryData::A24_png, BinaryData::A24_pngSize);
+	Image A25 = ImageCache::getFromMemory(BinaryData::A25_png, BinaryData::A25_pngSize);
+	Image A26 = ImageCache::getFromMemory(BinaryData::A26_png, BinaryData::A26_pngSize);
+	Image images[26] = { A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12 ,A13, A14, A15, A16, A17, A18, A19, A20, A21, A23, A24, A25, A26};
+
+	int currentIndex;
+	Image currentImage;
+
+	AnimatedComponent();
+	//~AnimatedComponent();
+
+	void timerCallback() override;
+
+
+};
 
 class OtherLookAndFeel : public LookAndFeel_V4
 {
 public:
-    
-    void drawRotarySlider (Graphics &g, int x, int y, int width, int height, float sliderPos, float rotaryStartAngle, float rotaryEndAngle, Slider &slider) override
-    {
-        float diameter = jmin(width, height);
-        float radius = diameter / 2;
-        float centreX = x + width / 2;
-        float centreY = y + height / 2;
-        float rx = centreX - radius;
-        float ry = centreY - radius;
-        float angle = rotaryStartAngle + (sliderPos * (rotaryEndAngle - rotaryStartAngle));
-        
-        std::cout << rotaryStartAngle << " " << rotaryEndAngle << std::endl;
-        
-        Rectangle<float> dialArea (rx, ry, diameter, diameter);
-        
-        g.setColour(Colours::red);
-        //g.drawRect(dialArea);
-        g.fillEllipse(dialArea);
-        
-        g.setColour(Colours::black);
-        //g.fillEllipse(centreX, centreY, 5, 5);
-        
-        Path dialTick;
-        dialTick.addRectangle(-5.0f, -radius, 10.0f, radius * 0.33);
-        
-        g.fillPath(dialTick, AffineTransform::rotation(angle).translated(centreX, centreY));
-        
-        g.setColour(Colours::black);
-        g.drawEllipse(rx, ry, diameter, diameter, 5.0f);
-        
-    }
-    
+	
+	Image img1 = ImageCache::getFromMemory(BinaryData::DemonKnob_png, BinaryData::DemonKnob_pngSize);
+	
+	void drawRotarySlider(Graphics &g, int x, int y, int width, int height, float sliderPos, float rotaryStartAngle, float rotaryEndAngle, Slider &slider) override
+	{
+		if (img1.isValid())
+		{
+			const double rotation = (slider.getValue()
+				- slider.getMinimum())
+				/ (slider.getMaximum()
+					- slider.getMinimum());
+
+			const int frames = img1.getHeight() / img1.getWidth();
+			const int frameId = (int)ceil(rotation * ((double)frames - 1.0));
+			const float radius = jmin(width / 2.0f, height / 2.0f);
+			const float centerX = x + width * 0.5f;
+			const float centerY = y + height * 0.5f;
+			const float rx = centerX - radius - 1.0f;
+			const float ry = centerY - radius;
+
+			g.drawImage(img1,
+				(int)rx,
+				(int)ry,
+				2 * (int)radius,
+				2 * (int)radius,
+				0,
+				frameId*img1.getWidth(),
+				img1.getWidth(),
+				img1.getWidth());
+		}
+		
+		
+		
+	}
+		
 };
 
-class OtherLookAndFeel2 : public LookAndFeel_V4
-{
-public:
-    
-    void drawRotarySlider (Graphics &g, int x, int y, int width, int height, float sliderPos, float rotaryStartAngle, float rotaryEndAngle, Slider &slider) override
-    {
-        float diameter = jmin(width, height);
-        float radius = diameter / 2;
-        float centreX = x + width / 2;
-        float centreY = y + height / 2;
-        float rx = centreX - radius;
-        float ry = centreY - radius;
-        float angle = rotaryStartAngle + (sliderPos * (rotaryEndAngle - rotaryStartAngle));
-        
-        std::cout << rotaryStartAngle << " " << rotaryEndAngle << std::endl;
-        
-        Rectangle<float> dialArea (rx, ry, diameter, diameter);
-        
-        g.setColour(Colours::yellowgreen);
-        //g.drawRect(dialArea);
-        g.fillEllipse(dialArea);
-        
-        g.setColour(Colours::black);
-        //g.fillEllipse(centreX, centreY, 5, 5);
-        
-        Path dialTick;
-        dialTick.addRectangle(-5.0f, -radius, 10.0f, radius * 0.33);
-        
-        g.fillPath(dialTick, AffineTransform::rotation(angle).translated(centreX, centreY));
-        
-        g.setColour(Colours::black);
-        g.drawEllipse(rx, ry, diameter, diameter, 5.0f);
-        
-    }
-    
-};
-
-class OtherLookAndFeel3 : public LookAndFeel_V4
-{
-public:
-    
-    void drawRotarySlider (Graphics &g, int x, int y, int width, int height, float sliderPos, float rotaryStartAngle, float rotaryEndAngle, Slider &slider) override
-    {
-        float diameter = jmin(width, height);
-        float radius = diameter / 2;
-        float centreX = x + width / 2;
-        float centreY = y + height / 2;
-        float rx = centreX - radius;
-        float ry = centreY - radius;
-        float angle = rotaryStartAngle + (sliderPos * (rotaryEndAngle - rotaryStartAngle));
-        
-        std::cout << rotaryStartAngle << " " << rotaryEndAngle << std::endl;
-        
-        Rectangle<float> dialArea (rx, ry, diameter, diameter);
-        
-        g.setColour(Colours::orangered);
-        //g.drawRect(dialArea);
-        g.fillEllipse(dialArea);
-        
-        g.setColour(Colours::black);
-        //g.fillEllipse(centreX, centreY, 5, 5);
-        
-        Path dialTick;
-        dialTick.addRectangle(-3.0f, -radius, 6.0f, radius * 0.33);
-        
-        g.fillPath(dialTick, AffineTransform::rotation(angle).translated(centreX, centreY));
-        
-        g.setColour(Colours::black);
-        g.drawEllipse(rx, ry, diameter, diameter, 5.0f);
-        
-    }
-    
-};
 
 class Initial_demonAudioProcessorEditor  : public AudioProcessorEditor
 {
@@ -139,12 +111,14 @@ public:
     void resized() override;
 
 private:
+
+    AnimatedComponent BigboyAnimation;
     
     juce::Image backGround;
     
     OtherLookAndFeel otherLookAndFeel;
-    OtherLookAndFeel2 otherLookAndFeel2;
-    OtherLookAndFeel3 otherLookAndFeel3;
+   // OtherLookAndFeel2 otherLookAndFeel2;
+   // OtherLookAndFeel3 otherLookAndFeel3;
     
     Slider filterCutoffDial;
     Slider filterResDial;
